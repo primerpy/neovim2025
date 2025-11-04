@@ -26,6 +26,14 @@ A modern, feature-rich Neovim configuration with LSP support, auto-completion, a
 
 ## Installation
 
+### To remove old
+
+```bash
+rm -rf ~/.config/nvim
+rm -rf ~/.local/share/nvim
+rm -rf ~/.local/state/nvim
+```
+
 ### Automated Installation
 
 The installation script will automatically:
