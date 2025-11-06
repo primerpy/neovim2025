@@ -15,7 +15,7 @@ vim.keymap.set('n', '<Right>', ':vertical :resize -2<CR>', { noremap = true, sil
 -- Buffer
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true, desc = 'Next buffer' })
 vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { noremap = true, silent = true, desc = 'Previous buffer' })
-vim.keymap.set('n', '<leader>bx', ':bdelete!<CR>', { noremap = true, silent = true, desc = 'Close buffer' })
+vim.keymap.set('n', '<leader>bx', ':Bdelete!<CR>', { noremap = true, silent = true, desc = 'Close buffer' })
 vim.keymap.set('n', '<leader>ba', ':%bd|e#|bd#<CR>', { noremap = true, silent = true, desc = 'Close all buffers except current' })
 vim.keymap.set('n', '<leader>bo', '<cmd> enew<CR>', { noremap = true, silent = true, desc = 'New buffer' })
 
