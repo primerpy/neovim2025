@@ -34,6 +34,14 @@ detect_os() {
             debian)
                 OS="debian"
                 ;;
+            linuxmint)
+                # Check if it's LMDE (Debian-based) vs regular Mint (Ubuntu-based)
+                if [[ "$ID_LIKE" == *"debian"* ]]; then
+                    OS="lmde"
+                else
+                    OS="ubuntu"
+                fi
+                ;;
             rocky|rhel)
                 OS="rocky"
                 ;;

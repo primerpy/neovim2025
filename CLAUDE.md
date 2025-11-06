@@ -94,6 +94,7 @@ The configuration includes automated installation scripts for multiple operating
 
 - **Ubuntu 24.04** - Uses PPA for latest Neovim
 - **Debian 13** - Downloads Neovim from GitHub releases
+- **LMDE 6** - Downloads Neovim from GitHub releases (Linux Mint Debian Edition)
 - **macOS** - Uses Homebrew for all installations
 - **Rocky Linux 9** - Uses dnf/EPEL repositories
 
@@ -108,6 +109,7 @@ The configuration includes automated installation scripts for multiple operating
 **OS-Specific Scripts:** `scripts/install-{os}.sh`
 - Ubuntu: `scripts/install-ubuntu.sh`
 - Debian: `scripts/install-debian.sh`
+- LMDE: `scripts/install-lmde.sh`
 - macOS: `scripts/install-macos.sh`
 - Rocky: `scripts/install-rocky.sh`
 
@@ -186,6 +188,12 @@ nvim  # First launch will install plugins and LSP servers
 - Downloads Neovim from GitHub (repos have older versions)
 - May download ripgrep from GitHub if not in repos
 - fd-find binary is named `fdfind`, symlinked to `fd`
+
+**LMDE 6:**
+- Downloads Neovim from GitHub (repos have older versions)
+- Uses stable Debian-based repositories
+- fd-find binary is named `fdfind`, symlinked to `fd`
+- Automatically detects LMDE vs regular Linux Mint
 
 **macOS:**
 - Installs Homebrew if not present
