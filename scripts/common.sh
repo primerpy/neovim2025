@@ -75,16 +75,20 @@ setup_config() {
 
 check_neovim_version() {
     if command -v nvim &> /dev/null; then
-        local version=$(nvim --version | head -n1 | grep -oP 'v\K[0-9]+\.[0-9]+')
-        local major=$(echo $version | cut -d. -f1)
-        local minor=$(echo $version | cut -d. -f2)
+        # Extract version number (works on both macOS and Linux)
+        local version=$(nvim --version | head -n1 | sed -E 's/.*v([0-9]+\.[0-9]+).*/\1/')
+        local major=$(echo "$version" | cut -d. -f1)
+        local minor=$(echo "$version" | cut -d. -f2)
 
-        if [[ $major -gt 0 ]] || [[ $major -eq 0 && $minor -ge 10 ]]; then
-            print_success "Neovim version $version is compatible"
-            return 0
-        else
-            print_warning "Neovim version $version found, but 0.10+ is recommended"
-            return 1
+        # Check if version numbers are valid integers
+        if [[ "$major" =~ ^[0-9]+$ ]] && [[ "$minor" =~ ^[0-9]+$ ]]; then
+            if [[ $major -gt 0 ]] || [[ $major -eq 0 && $minor -ge 10 ]]; then
+                print_success "Neovim version $version is compatible"
+                return 0
+            else
+                print_warning "Neovim version $version found, but 0.10+ is recommended"
+                return 1
+            fi
         fi
     fi
     return 1

@@ -69,13 +69,20 @@ if ! check_command lazygit; then
 fi
 
 # Install a Nerd Font
-print_info "Installing Nerd Font..."
-brew tap homebrew/cask-fonts
-if ! brew list --cask font-jetbrains-mono-nerd-font &> /dev/null; then
-    brew install --cask font-jetbrains-mono-nerd-font
-    print_success "JetBrains Mono Nerd Font installed"
+print_info "Checking for Nerd Font..."
+# Check if font is already installed (either via brew or manually)
+if [[ -f "$HOME/Library/Fonts/FiraCodeNerdFont-Regular.ttf" ]] || \
+   [[ -f "$HOME/Library/Fonts/FiraCodeNerdFont-Bold.ttf" ]] || \
+   brew list --cask font-fira-code-nerd-font &> /dev/null; then
+    print_success "Fira Code Nerd Font already installed"
 else
-    print_success "Nerd Font already installed"
+    print_info "Installing Fira Code Nerd Font..."
+    # Note: homebrew/cask-fonts tap is deprecated, fonts are now in main cask repository
+    if brew install --cask font-fira-code-nerd-font 2>/dev/null; then
+        print_success "Fira Code Nerd Font installed"
+    else
+        print_warning "Font installation skipped (may already be installed manually)"
+    fi
 fi
 
 # Setup Neovim configuration
@@ -83,4 +90,4 @@ cd "$SCRIPT_DIR"
 setup_config
 
 print_success "macOS installation completed!"
-print_info "You may need to configure your terminal to use the JetBrains Mono Nerd Font"
+print_info "You may need to configure your terminal to use the Fira Code Nerd Font"
