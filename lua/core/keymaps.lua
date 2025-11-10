@@ -41,6 +41,15 @@ vim.keymap.set('n', '<leader>tp', ':tabp<CR>', { noremap = true, silent = true, 
 -- Toggle line wrapping
 vim.keymap.set('n', '<leader>lw', '<cmd>set wrap!<CR>', { noremap = true, silent = true, desc = 'Toggle line wrapping' })
 
+-- Folding
+vim.keymap.set('n', '<leader>za', 'za', { noremap = true, silent = true, desc = 'Toggle fold at cursor' })
+vim.keymap.set('n', '<leader>zM', 'zM', { noremap = true, silent = true, desc = 'Close all folds' })
+vim.keymap.set('n', '<leader>zR', 'zR', { noremap = true, silent = true, desc = 'Open all folds' })
+vim.keymap.set('n', '<leader>zo', 'zo', { noremap = true, silent = true, desc = 'Open fold at cursor' })
+vim.keymap.set('n', '<leader>zc', 'zc', { noremap = true, silent = true, desc = 'Close fold at cursor' })
+vim.keymap.set('n', 'zj', 'zj', { noremap = true, silent = true, desc = 'Move to next fold' })
+vim.keymap.set('n', 'zk', 'zk', { noremap = true, silent = true, desc = 'Move to previous fold' })
+
 -- Stay in indent mode
 vim.keymap.set('v', '<', '<gv', { noremap = true, silent = true, desc = 'Indent left and reselect' })
 vim.keymap.set('v', '>', '>gv', { noremap = true, silent = true, desc = 'Indent right and reselect' })

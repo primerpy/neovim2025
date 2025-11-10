@@ -255,6 +255,8 @@ Inside Neovim:
 
 5. **Diagnostics:** Configured to show inline virtual text with error codes, no underlines, and updates in insert mode
 
+6. **Code folding:** Uses Treesitter for syntax-aware folding with all folds open by default (foldlevel=99)
+
 ## Keymap Reference
 
 **Leader Key**: `Space`
@@ -330,6 +332,15 @@ Inside Neovim:
 - `<leader>lw` - Toggle line wrapping
 - `<` / `>` (visual mode) - Indent left/right and reselect
 - `<C-/>` or `<C-c>` - Toggle comment (normal/visual mode)
+
+### Folding
+- `<leader>za` - Toggle fold at cursor
+- `<leader>zM` - Close all folds
+- `<leader>zR` - Open all folds
+- `<leader>zo` - Open fold at cursor
+- `<leader>zc` - Close fold at cursor
+- `zj` - Move to next fold
+- `zk` - Move to previous fold
 
 ### Claude Code
 - `<leader>cc` - Toggle Claude Code

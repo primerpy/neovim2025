@@ -49,3 +49,11 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 vim.opt.runtimepath:remove '/usr/share/vim/vimfiles' -- Separate Vim plugins from Neovim in case Vim still in use (default: includes this path if Vim is installed)
+
+-- Folding options
+vim.o.foldmethod = 'expr' -- Use expression-based folding (Treesitter)
+vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use Treesitter for folding
+vim.o.foldlevel = 99 -- Start with all folds open (default: 0)
+vim.o.foldlevelstart = 99 -- Open all folds when opening a file (default: -1)
+vim.o.foldenable = true -- Enable folding (default: true)
+vim.o.foldcolumn = '0' -- Don't show fold column (default: '0')

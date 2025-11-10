@@ -8,6 +8,7 @@ A modern, feature-rich Neovim configuration with LSP support, auto-completion, a
 - **Auto-Import**: Automatic import suggestions for Python (via Pyright)
 - **Auto-Completion**: Intelligent code completion with nvim-cmp
 - **Syntax Highlighting**: TreeSitter-based syntax highlighting
+- **Code Folding**: Treesitter-powered syntax-aware code folding
 - **Fuzzy Finding**: Telescope for file and text searching
 - **File Explorer**: Neo-tree for file navigation
 - **Git Integration**: Gitsigns for git integration
