@@ -30,7 +30,23 @@ return {
 
       -- Formatters
       formatting.prettier.with {
-        filetypes = { 'html', 'json', 'yaml', 'markdown' },
+        filetypes = {
+          'javascript',
+          'javascriptreact',
+          'typescript',
+          'typescriptreact',
+          'vue',
+          'svelte',
+          'css',
+          'scss',
+          'less',
+          'html',
+          'json',
+          'jsonc',
+          'yaml',
+          'markdown',
+          'graphql',
+        },
       },
       formatting.djlint.with {
         filetypes = { 'htmldjango' },
