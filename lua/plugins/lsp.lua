@@ -221,6 +221,21 @@ return {
       gopls = {},
       jsonls = {},
       yamlls = {},
+      emmet_ls = {
+        filetypes = {
+          'html',
+          'htmldjango',
+          'css',
+          'scss',
+          'less',
+          'javascript',
+          'javascriptreact',
+          'typescript',
+          'typescriptreact',
+          'vue',
+          'svelte',
+        },
+      },
       lua_ls = {
         settings = {
           Lua = {
