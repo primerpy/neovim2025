@@ -50,6 +50,16 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 vim.opt.runtimepath:remove '/usr/share/vim/vimfiles' -- Separate Vim plugins from Neovim in case Vim still in use (default: includes this path if Vim is installed)
 
+-- Go to file (gf) support for path aliases like @ in React/TypeScript projects
+vim.opt.path:append('src/**') -- Allow gf to search in src directory
+vim.opt.suffixesadd:append({ '.js', '.jsx', '.ts', '.tsx', '.json', '.vue', '.svelte' })
+vim.opt.isfname:append('@-@') -- Include @ in filename characters
+vim.opt.isfname:append('#') -- Include # in filename characters
+vim.opt.isfname:append('~') -- Include ~ in filename characters
+
+-- Transform @ alias to src/ for gf command
+vim.opt.includeexpr = [[v:lua.require('core.gf_alias').transform(v:fname)]]
+
 -- Folding options
 vim.o.foldmethod = 'expr' -- Use expression-based folding (Treesitter)
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Use Treesitter for folding
