@@ -47,6 +47,20 @@ if ! check_command python3; then
     print_success "Python3 installed"
 fi
 
+# Install Go (for gopls, goimports, gofmt)
+if ! check_command go; then
+    print_info "Installing Go..."
+    brew install go
+    print_success "Go installed"
+fi
+
+# Install clang-format (for C/C++ formatting)
+if ! check_command clang-format; then
+    print_info "Installing clang-format..."
+    brew install clang-format
+    print_success "clang-format installed"
+fi
+
 # Install ripgrep
 if ! check_command rg; then
     print_info "Installing ripgrep..."

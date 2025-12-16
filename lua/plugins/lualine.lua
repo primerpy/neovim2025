@@ -1,11 +1,14 @@
 return {
   'nvim-lualine/lualine.nvim',
   config = function()
+    -- Check if using a non-nerd font (set NVIM_FONT=MonoLisa in your shell rc)
+    local is_monolisa = vim.env.NVIM_FONT == 'MonoLisa'
+
     local mode = {
       'mode',
       fmt = function(str)
-        return ' ' .. str
-        -- return ' ' .. str:sub(1, 1) -- displays only the first character of the mode
+        return ' ' .. str
+        -- return ' ' .. str:sub(1, 1) -- displays only the first character of the mode
       end,
     }
 
@@ -23,7 +26,8 @@ return {
       'diagnostics',
       sources = { 'nvim_diagnostic' },
       sections = { 'error', 'warn' },
-      symbols = { error = ' ', warn = ' ', info = ' ', hint = ' ' },
+      symbols = is_monolisa and { error = 'E:', warn = 'W:', info = 'I:', hint = 'H:' }
+        or { error = '\u{f057} ', warn = '\u{f071} ', info = '\u{f05a} ', hint = '\u{f059} ' },
       colored = false,
       update_in_insert = false,
       always_visible = false,
@@ -33,19 +37,23 @@ return {
     local diff = {
       'diff',
       colored = false,
-      symbols = { added = ' ', modified = ' ', removed = ' ' }, -- changes diff symbols
+      symbols = is_monolisa and { added = '+', modified = '~', removed = '-' }
+        or { added = '\u{f457} ', modified = '\u{f459} ', removed = '\u{f458} ' },
       cond = hide_in_width,
     }
 
+    -- Separators based on font
+    local section_seps = is_monolisa and { left = '', right = '' } or { left = '\u{e0b0}', right = '\u{e0b2}' }
+    local component_seps = is_monolisa and { left = '|', right = '|' } or { left = '\u{e0b1}', right = '\u{e0b3}' }
+
     require('lualine').setup {
       options = {
-        icons_enabled = true,
+        icons_enabled = not is_monolisa,
         theme = 'gruvbox', -- Set theme based on environment variable
         -- Some useful glyphs:
         -- https://www.nerdfonts.com/cheat-sheet
-        --        
-        section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' },
+        section_separators = section_seps,
+        component_separators = component_seps,
         disabled_filetypes = { 'alpha', 'neo-tree' },
         always_divide_middle = true,
       },

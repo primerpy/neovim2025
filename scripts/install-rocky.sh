@@ -19,7 +19,7 @@ sudo dnf update -y
 # Install development tools
 print_info "Installing development tools..."
 sudo dnf groupinstall -y "Development Tools"
-sudo dnf install -y curl wget git unzip
+sudo dnf install -y curl wget git unzip readline-devel
 
 # Install Neovim from GitHub releases (Rocky repos may have older versions)
 if ! check_neovim_version; then
@@ -40,11 +40,42 @@ if ! check_command node; then
     print_success "Node.js installed"
 fi
 
-# Install Python and pip
-if ! check_command python3; then
-    print_info "Installing Python3..."
-    sudo dnf install -y python3 python3-pip
-    print_success "Python3 installed"
+# Install Python and pip (ensure venv is always installed for Mason)
+print_info "Installing Python3 and venv..."
+sudo dnf install -y python3 python3-pip python3-virtualenv
+print_success "Python3 and venv installed"
+
+# Install Go (for gopls, goimports, gofmt)
+if ! check_command go; then
+    print_info "Installing Go..."
+    GO_VERSION="1.23.4"
+    wget -q "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz"
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz"
+    rm "go${GO_VERSION}.linux-amd64.tar.gz"
+    # Add to PATH for current session
+    export PATH=$PATH:/usr/local/go/bin
+    # Detect shell and add to appropriate rc file
+    SHELL_RC=""
+    if [[ -n "$ZSH_VERSION" ]] || [[ "$SHELL" == */zsh ]]; then
+        SHELL_RC="$HOME/.zshrc"
+    elif [[ -n "$BASH_VERSION" ]] || [[ "$SHELL" == */bash ]]; then
+        SHELL_RC="$HOME/.bashrc"
+    fi
+    if [[ -n "$SHELL_RC" ]] && [[ -f "$SHELL_RC" ]]; then
+        if ! grep -q '/usr/local/go/bin' "$SHELL_RC"; then
+            echo 'export PATH=$PATH:/usr/local/go/bin' >> "$SHELL_RC"
+            print_info "Added Go to PATH in $SHELL_RC"
+        fi
+    fi
+    print_success "Go installed"
+fi
+
+# Install clang-format (for C/C++ formatting)
+if ! check_command clang-format; then
+    print_info "Installing clang-format..."
+    sudo dnf install -y clang-tools-extra
+    print_success "clang-format installed"
 fi
 
 # Install ripgrep (for Telescope grep)
