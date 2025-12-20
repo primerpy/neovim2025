@@ -18,8 +18,15 @@ if #node_dirs > 0 then
   vim.env.PATH = node_path .. ':' .. vim.env.PATH
 end
 
+-- Ensure cargo bin is in PATH for tree-sitter CLI
+local cargo_bin = vim.fn.expand('$HOME/.cargo/bin')
+if vim.fn.isdirectory(cargo_bin) == 1 then
+  vim.env.PATH = cargo_bin .. ':' .. vim.env.PATH
+end
+
 require 'core.options'
 require 'core.keymaps'
+require 'core.snippets'
 
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'

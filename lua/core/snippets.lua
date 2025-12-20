@@ -54,3 +54,17 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
   group = django_group,
 })
+
+-- LaTeX settings: enable line wrapping and set text width
+local latex_group = vim.api.nvim_create_augroup('LaTeXSettings', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'tex', 'latex', 'plaintex' },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true -- Wrap at word boundaries
+    vim.opt_local.textwidth = 0 -- Disable auto hard-wrap, use visual wrap only
+    vim.opt_local.spell = true -- Enable spell checking
+    vim.opt_local.spelllang = 'en_us'
+  end,
+  group = latex_group,
+})
