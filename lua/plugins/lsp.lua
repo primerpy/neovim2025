@@ -73,6 +73,11 @@ return {
         -- or a suggestion from your LSP for this to activate.
         map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
 
+        -- Format buffer
+        map('<leader>lf', function()
+          vim.lsp.buf.format { async = false }
+        end, '[L]SP [F]ormat')
+
         -- Trigger import suggestions for the symbol under cursor
         -- Works by simulating typing: delete last char and retype it to trigger nvim-cmp
         -- This shows Pyright's auto-import completions for existing undefined symbols
@@ -162,45 +167,67 @@ return {
     -- - settings (table): Override the default settings passed when initializing the server.
     local servers = {
       ts_ls = {},
-      ruff = {},
+      ruff = {
+        init_options = {
+          settings = {
+            -- Linting settings
+            lint = {
+              enable = true,
+              -- Best practice rule selection
+              select = {
+                'F', -- Pyflakes (errors, undefined names, etc.)
+                'E', -- pycodestyle errors
+                'W', -- pycodestyle warnings
+                'I', -- isort (import sorting)
+                'B', -- flake8-bugbear (bug detection)
+                'UP', -- pyupgrade (modern Python syntax)
+                'N', -- pep8-naming
+                'SIM', -- flake8-simplify
+                'RUF', -- Ruff-specific rules
+              },
+              -- Ignore specific rules if needed
+              ignore = {
+                'E501', -- Line too long (handled by formatter)
+              },
+            },
+            -- Formatting settings
+            format = {
+              preview = true,
+            },
+            -- Code actions
+            fixAll = true,
+            organizeImports = true,
+            -- Line length (match Black's default)
+            lineLength = 88,
+          },
+        },
+      },
       pyright = {
+        -- Pyright only for IDE features: auto-imports, go-to-definition, hover, references
+        -- All diagnostics handled by Ruff
+        capabilities = {
+          textDocument = {
+            publishDiagnostics = {
+              tagSupport = { valueSet = {} },
+            },
+          },
+        },
         settings = {
           pyright = {
-            -- Using Ruff's import organizer
-            disableOrganizeImports = true,
+            disableOrganizeImports = true, -- Ruff handles this
           },
           python = {
             analysis = {
-              -- Auto-import completions
               autoImportCompletions = true,
-              -- Auto-search paths for imports
               autoSearchPaths = true,
-              -- Use library code for types
               useLibraryCodeForTypes = true,
-              -- Disable diagnostics - only Ruff should provide diagnostics
               diagnosticMode = 'off',
-              -- Disable type checking diagnostics
               typeCheckingMode = 'off',
             },
           },
         },
       },
-      pylsp = {
-        settings = {
-          pylsp = {
-            plugins = {
-              pyflakes = { enabled = false },
-              pycodestyle = { enabled = false },
-              autopep8 = { enabled = false },
-              yapf = { enabled = false },
-              mccabe = { enabled = false },
-              pylsp_mypy = { enabled = false },
-              pylsp_black = { enabled = false },
-              pylsp_isort = { enabled = false },
-            },
-          },
-        },
-      },
+      -- pylsp removed - Ruff + Pyright cover all features
       html = { filetypes = { 'html', 'twig', 'hbs' } },
       ['django-template-lsp'] = {
         filetypes = { 'htmldjango' },

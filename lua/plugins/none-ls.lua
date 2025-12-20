@@ -56,11 +56,7 @@ return {
       formatting.shfmt.with { args = { '-i', '4' } },
       formatting.terraform_fmt,
 
-      -- Python via Ruff
-      require('none-ls.formatting.ruff').with {
-        extra_args = { '--extend-select', 'I' },
-      },
-      require 'none-ls.formatting.ruff_format',
+      -- Python formatting handled by Ruff LSP directly (see lsp.lua)
 
       -- C / C++
       formatting.clang_format.with {
