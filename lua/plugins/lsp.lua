@@ -73,10 +73,18 @@ return {
         -- or a suggestion from your LSP for this to activate.
         map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
 
-        -- Format buffer
+        -- Format buffer + organize imports + fix all (sequential)
         map('<leader>lf', function()
-          vim.lsp.buf.format { async = false }
-        end, '[L]SP [F]ormat')
+          -- Organize imports first (Ruff)
+          vim.lsp.buf.code_action {
+            context = { only = { 'source.organizeImports' } },
+            apply = true,
+          }
+          -- Wait a bit, then format
+          vim.defer_fn(function()
+            vim.lsp.buf.format { async = false }
+          end, 100)
+        end, '[L]SP [F]ormat + Organize imports')
 
         -- Trigger import suggestions for the symbol under cursor
         -- Works by simulating typing: delete last char and retype it to trigger nvim-cmp

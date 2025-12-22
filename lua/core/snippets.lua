@@ -17,7 +17,11 @@ vim.diagnostic.config {
   underline = false,
   update_in_insert = true,
   float = {
-    source = true, -- Or "if_many"
+    source = true,
+    border = 'rounded',
+    width = 120,
+    wrap = true,
+    wrap_at = 120,
   },
   signs = {
     text = {
@@ -53,6 +57,35 @@ vim.api.nvim_create_autocmd('FileType', {
     vim.opt_local.softtabstop = 2
   end,
   group = django_group,
+})
+
+-- Jinja2/DTL filetype detection
+vim.filetype.add {
+  extension = {
+    jinja = 'htmldjango',
+    jinja2 = 'htmldjango',
+    j2 = 'htmldjango',
+  },
+  pattern = {
+    ['.*%.html%.jinja'] = 'htmldjango',
+    ['.*%.html%.jinja2'] = 'htmldjango',
+    ['.*%.html%.j2'] = 'htmldjango',
+  },
+}
+
+-- Auto-detect Jinja2/DTL syntax in .html files
+local template_group = vim.api.nvim_create_augroup('TemplateDetection', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = '*.html',
+  callback = function()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, 50, false) -- Check first 50 lines
+    local content = table.concat(lines, '\n')
+    -- Check for Jinja2/DTL patterns: {% %}, {{ }}, {# #}
+    if content:match('{%%') or content:match('{{') or content:match('{#') then
+      vim.bo.filetype = 'htmldjango'
+    end
+  end,
+  group = template_group,
 })
 
 -- LaTeX settings: enable line wrapping and set text width

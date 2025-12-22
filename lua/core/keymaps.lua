@@ -63,7 +63,15 @@ vim.keymap.set('n', ']d', function()
   vim.diagnostic.jump { count = 1, float = true }
 end, { desc = 'Go to next diagnostic message' })
 
-vim.keymap.set('n', '<leader>d', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>dd', function()
+  local _, winid = vim.diagnostic.open_float { focus = true }
+  if winid then
+    vim.keymap.set('n', '<Esc>', function()
+      vim.api.nvim_win_close(winid, true)
+      vim.keymap.del('n', '<Esc>', { buffer = 0 })
+    end, { buffer = 0, desc = 'Close diagnostic float' })
+  end
+end, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
 -- Claude
