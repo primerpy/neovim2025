@@ -268,7 +268,26 @@ return {
       terraformls = {},
       gopls = {},
       jsonls = {},
-      yamlls = {},
+      yamlls = {
+        settings = {
+          yaml = {
+            schemas = {
+              ['https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json'] = {
+                'docker-compose*.yml',
+                'docker-compose*.yaml',
+                'compose*.yml',
+                'compose*.yaml',
+              },
+              ['https://json.schemastore.org/github-workflow.json'] = '.github/workflows/*.yml',
+              ['https://json.schemastore.org/github-action.json'] = 'action.yml',
+              ['https://json.schemastore.org/pre-commit-config.json'] = '.pre-commit-config.yaml',
+            },
+            validate = true,
+            completion = true,
+            hover = true,
+          },
+        },
+      },
       emmet_ls = {
         filetypes = {
           'html',

@@ -28,15 +28,16 @@ end
 
 -- Format flags: --mount=type=cache,target=/root/.cache
 local function format_flags(str)
-  -- Ensure space before flags
-  str = str:gsub('([^%s])%-%-', '%1 --')
+  -- Ensure space before flags (but not inside quotes)
+  -- Only add space if preceded by non-space, non-quote character
+  str = str:gsub('([^%s"])%-%-', '%1 --')
   -- No space around = in flags
   str = str:gsub('%-%-(%w+)%s*=%s*', '--%1=')
   return str
 end
 
 -- General formatting: spaces after commas, colons, etc.
-local function format_general(str)
+local function format_general(str, is_instruction_line)
   -- Space after comma (but not in flag values like --mount=type=cache,target=...)
   if not str:match('%-%-[%w]+=') then
     str = str:gsub(',%s*', ', ')
@@ -57,11 +58,17 @@ local function format_general(str)
   -- Space after ; (but keep it tight)
   str = str:gsub(';%s*', '; ')
 
-  -- No multiple spaces (except leading indentation)
+  -- No multiple spaces
   local leading = str:match('^(%s*)')
   local rest = str:gsub('^%s*', '')
   rest = rest:gsub('%s+', ' ')
-  str = leading .. rest
+
+  -- Instruction lines should have NO leading whitespace
+  if is_instruction_line then
+    str = rest
+  else
+    str = leading .. rest
+  end
 
   return str
 end
@@ -130,15 +137,18 @@ function M.format()
     if in_continuation then
       formatted_line = line:gsub('^%s*', '    ')
     else
-      -- Uppercase instructions and remove leading whitespace
+      -- Uppercase instructions and remove ALL leading whitespace
       for _, instr in ipairs(instructions) do
-        local lower_pattern = '^%s*' .. instr:lower() .. '([%s%[])'
-        local mixed_pattern = '^%s*' .. instr .. '([%s%[])'
+        local lower_pattern = '^%s*' .. instr:lower() .. '([%s%[]?)'
+        local mixed_pattern = '^%s*' .. instr .. '([%s%[]?)'
         if line:lower():match(lower_pattern) then
-          formatted_line = line:gsub('^%s*%w+', instr)
+          -- Remove leading whitespace, then replace instruction with uppercase
+          local rest = line:gsub('^%s*%w+', '')
+          formatted_line = instr .. rest
           break
         elseif line:match(mixed_pattern) then
-          formatted_line = line:gsub('^%s*%w+', instr)
+          local rest = line:gsub('^%s*%w+', '')
+          formatted_line = instr .. rest
           break
         end
       end
@@ -187,7 +197,9 @@ function M.format()
     end
 
     -- Apply general formatting (spaces after commas, around operators, etc.)
-    formatted_line = format_general(formatted_line)
+    -- Pass whether this is an instruction line (should have no leading space)
+    local is_instruction = current_instruction ~= nil and not in_continuation
+    formatted_line = format_general(formatted_line, is_instruction)
 
     table.insert(formatted, formatted_line)
     prev_instruction = current_instruction
