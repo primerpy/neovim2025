@@ -224,31 +224,24 @@ return {
         },
       },
       pyright = {
-        -- Pyright only for IDE features: auto-imports, go-to-definition, hover, references
-        -- All diagnostics handled by Ruff
-        capabilities = {
-          textDocument = {
-            publishDiagnostics = {
-              tagSupport = { valueSet = {} },
-            },
-          },
-        },
         settings = {
           pyright = {
-            disableOrganizeImports = true, -- Ruff handles this
+            -- Use Pyright for auto-imports
+            autoImportCompletions = true,
           },
           python = {
             analysis = {
-              autoImportCompletions = true,
-              autoSearchPaths = true,
-              useLibraryCodeForTypes = true,
+              -- Disable diagnostics (Ruff handles linting)
               diagnosticMode = 'off',
               typeCheckingMode = 'off',
+              -- But keep these features
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
             },
           },
         },
       },
-      -- pylsp removed - Ruff + Pyright cover all features
+      -- Ruff handles linting, formatting, and import sorting
       html = { filetypes = { 'html', 'twig', 'hbs' } },
       ['django-template-lsp'] = {
         filetypes = { 'htmldjango' },
@@ -264,8 +257,7 @@ return {
       cssls = {},
       tailwindcss = {},
       dockerls = {},
-      sqlls = {},
-      terraformls = {},
+      sqls = {},
       gopls = {},
       jsonls = {},
       yamlls = {

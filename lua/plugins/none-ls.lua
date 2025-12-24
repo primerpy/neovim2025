@@ -16,7 +16,7 @@ return {
         'shfmt', -- shell formatter
         'checkmake', -- makefile linter
         'clang-format', -- c/c++ formatter
-        'rustfmt', -- rust formatter
+        -- rustfmt: install via rustup, not Mason (deprecated)
         'gofmt', -- go formatter
         'goimports', -- go imports
         'djlint', -- django template formatter
@@ -54,7 +54,6 @@ return {
       },
       formatting.stylua,
       formatting.shfmt.with { args = { '-i', '4' } },
-      formatting.terraform_fmt,
 
       -- Python formatting handled by Ruff LSP directly (see lsp.lua)
 
