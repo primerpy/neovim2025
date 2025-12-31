@@ -16,7 +16,18 @@ vim.keymap.set('n', '<Right>', ':vertical :resize -2<CR>', { noremap = true, sil
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true, desc = 'Next buffer' })
 vim.keymap.set('n', '<S-Tab>', ':bprevious<CR>', { noremap = true, silent = true, desc = 'Previous buffer' })
 vim.keymap.set('n', '<leader>bx', ':Bdelete!<CR>', { noremap = true, silent = true, desc = 'Close buffer' })
-vim.keymap.set('n', '<leader>ba', ':%bd|e#|bd#<CR>', { noremap = true, silent = true, desc = 'Close all buffers except current' })
+vim.keymap.set('n', '<leader>ba', function()
+  local current = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= current and vim.api.nvim_buf_is_loaded(buf) then
+      local ft = vim.bo[buf].filetype
+      -- Skip neo-tree and other special buffers
+      if ft ~= 'neo-tree' and ft ~= 'notify' and ft ~= 'noice' then
+        pcall(vim.api.nvim_buf_delete, buf, { force = true })
+      end
+    end
+  end
+end, { noremap = true, silent = true, desc = 'Close all buffers except current' })
 vim.keymap.set('n', '<leader>bo', '<cmd> enew<CR>', { noremap = true, silent = true, desc = 'New buffer' })
 
 -- Window management
