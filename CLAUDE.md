@@ -7,10 +7,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Neovim configuration using **lazy.nvim** as the plugin manager. The configuration follows a modular structure:
 
 - **init.lua**: Entry point that loads core configuration and bootstraps lazy.nvim
+  - Auto-detects NVM Node.js (latest version) and adds to PATH for LSP servers
+  - Auto-detects Cargo bin for tree-sitter CLI
 - **lua/core/**: Core Neovim settings
   - `options.lua`: Editor options (tabs, line numbers, search behavior, etc.)
   - `keymaps.lua`: Global keybindings (leader key is Space)
-  - `snippets.lua`: Diagnostic configuration and visual customizations
+  - `snippets.lua`: Diagnostic configuration, filetype detection, and autocmds
+  - `dockerfile_fmt.lua`: Custom Dockerfile formatter
+  - `gf_alias.lua`: Path alias transformation for `gf` command (Vite/React aliases like `@`, `@components`)
 - **lua/plugins/**: Each plugin has its own file with configuration
   - Plugins are loaded via `require()` statements in init.lua
   - Each plugin file returns a lazy.nvim plugin spec table
@@ -38,12 +42,12 @@ LSP setup uses the modern Neovim 0.11+ API pattern:
 
 **Important LSP Servers Configured:**
 - TypeScript: `ts_ls`
-- Python: `pyright` (auto-imports only) + `pylsp` (completions) + `ruff` (diagnostics/linting/formatting)
+- Python: `pyright` (auto-imports only) + `ruff` (diagnostics/linting/formatting)
 - Lua: `lua_ls` (configured for Neovim development)
 - Go: `gopls`
-- Web: `html`, `cssls`, `tailwindcss`, `jsonls`, `yamlls`
+- Web: `html`, `cssls`, `tailwindcss`, `jsonls`, `yamlls`, `emmet_ls`
 - Django: `django-template-lsp` for Django templates (htmldjango files)
-- Infrastructure: `dockerls`, `sqlls`, `terraformls`
+- Infrastructure: `dockerls`, `sqls`
 
 **Python Auto-Import Feature:**
 
@@ -71,20 +75,35 @@ Auto-imports work in two ways:
 ### Formatting & Linting
 
 The config uses **none-ls** (null-ls successor) for formatting:
-- Manual formatting via `<leader>lf` keymap (lua/plugins/none-ls.lua:66)
+- Manual formatting via `<leader>lf` keymap (lua/plugins/lsp.lua:77-100)
 - Auto-format on save is DISABLED by default
-- Python: uses Ruff for both formatting and import sorting
+- Python: uses Ruff for both formatting and import sorting (via LSP code action)
 - Lua: uses stylua
 - Shell scripts: uses shfmt with 4-space indentation
-- Web files: uses prettier (HTML, JSON, YAML, Markdown only - NOT JS/TS)
+- Web files: uses prettier (JS, TS, CSS, HTML, JSON, YAML, Markdown, GraphQL, Vue, Svelte)
 - Django templates: uses djlint with 2-space indentation
 - Go: uses gofmt + goimports
 - Rust: uses rustfmt
 - C/C++: uses clang-format
+- Dockerfile: custom formatter (lua/core/dockerfile_fmt.lua)
 
-**Note**: Django templates (htmldjango) automatically use 2-space tabs (configured in lua/core/snippets.lua:47)
+**Note**: Django templates (htmldjango) automatically use 2-space tabs (configured in lua/core/snippets.lua:50-60)
 
 **To format current buffer:** `<leader>lf` (Space + lf)
+
+### Template Detection
+
+Jinja2 and Django templates are automatically detected:
+- Files with `.jinja`, `.jinja2`, `.j2` extensions are set to `htmldjango`
+- HTML files containing `{% %}`, `{{ }}`, or `{# #}` patterns are auto-detected as `htmldjango`
+- Detection logic in lua/core/snippets.lua:62-89
+
+### LaTeX Settings
+
+LaTeX files (`.tex`, `.latex`, `.plaintex`) have special settings:
+- Line wrapping enabled with word boundaries
+- Spell checking enabled (en_us)
+- Configured in lua/core/snippets.lua:91-103
 
 ## Installation System
 
@@ -325,7 +344,7 @@ Inside Neovim:
 ### Diagnostics
 - `[d` - Go to previous diagnostic
 - `]d` - Go to next diagnostic
-- `<leader>d` - Open floating diagnostic
+- `<leader>dd` - Open floating diagnostic
 - `<leader>q` - Open diagnostics list
 
 ### Editing
@@ -419,7 +438,7 @@ Inside Neovim:
    - Completion menu should appear automatically with import suggestions
    - If this works, but `<leader>ci` doesn't, the issue is with the keymap
 
-4. Check pyright configuration in `lua/plugins/lsp.lua:143-164`:
+4. Check pyright configuration in `lua/plugins/lsp.lua:226-243`:
    - `autoImportCompletions` should be `true`
    - `diagnosticMode` should be `'off'` (only Ruff handles diagnostics)
 
@@ -485,7 +504,7 @@ Inside Neovim:
    ```
    Look for formatters like `ruff`, `stylua`, `prettier`, etc.
 
-3. Check none-ls sources in `lua/plugins/none-ls.lua:30-60`
+3. Check none-ls sources in `lua/plugins/none-ls.lua:27-75`
 
 4. Restart LSP:
    ```vim
@@ -512,7 +531,7 @@ Inside Neovim:
    :Mason
    ```
 
-3. Verify the LSP configuration in `lua/plugins/lsp.lua:182-192`
+3. Verify the LSP configuration in `lua/plugins/lsp.lua:246-256`
 
 ### Plugin Installation Issues
 
