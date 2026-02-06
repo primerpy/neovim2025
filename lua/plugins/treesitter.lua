@@ -4,36 +4,42 @@ return  { -- Highlight, edit, and navigate code
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 
-                  'lua',
-      'python',
-      'javascript',
-      'typescript',
-      'vimdoc',
-      'vim',
-      'regex',
-      'terraform',
-      'sql',
-      'dockerfile',
-      'toml',
-      'json',
-      'java',
-      'groovy',
-      'go',
-      'gitignore',
-      'graphql',
-      'yaml',
-      'make',
-      'cmake',
-      'markdown',
-      'markdown_inline',
-      'bash',
-      'tsx',
-      'css',
-      'html',
-      'htmldjango',
-            'rust',
-        },
+      ensure_installed = {
+        -- Core
+        'lua',
+        'vim',
+        'vimdoc',
+        'regex',
+        'bash',
+        -- Frontend (React)
+        'javascript',
+        'typescript',
+        'tsx',
+        'html',
+        'css',
+        -- Backend
+        'python',
+        'go',
+        'rust',
+        'java',
+        -- Data/Config
+        'json',
+        'yaml',
+        'toml',
+        'graphql',
+        -- Infrastructure
+        'terraform',
+        'sql',
+        'dockerfile',
+        'make',
+        'cmake',
+        -- Other
+        'markdown',
+        'markdown_inline',
+        'groovy',
+        'gitignore',
+        'htmldjango',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {

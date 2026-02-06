@@ -31,20 +31,22 @@ return {
       -- Formatters
       formatting.prettier.with {
         filetypes = {
+          -- JavaScript/TypeScript (React)
           'javascript',
           'javascriptreact',
           'typescript',
           'typescriptreact',
-          'vue',
-          'svelte',
+          -- Styles
           'css',
-          'scss',
           'less',
+          -- Markup
           'html',
+          'markdown',
+          'mdx',
+          -- Data
           'json',
           'jsonc',
           'yaml',
-          'markdown',
           'graphql',
         },
       },

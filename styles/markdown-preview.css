@@ -1,0 +1,204 @@
+/* Reset and full width */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+body {
+  background-color: #ffffff !important;
+  color: #24292f !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  padding: 2rem !important;
+  box-sizing: border-box !important;
+}
+
+.markdown-body {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  color: #24292f !important;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #24292f !important;
+  font-weight: 600 !important;
+  margin-top: 24px !important;
+  margin-bottom: 16px !important;
+}
+
+h1 {
+  font-size: 2em !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding-bottom: 0.3em !important;
+}
+
+h2 {
+  font-size: 1.5em !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding-bottom: 0.3em !important;
+}
+
+h3 { font-size: 1.25em !important; }
+h4 { font-size: 1em !important; }
+h5 { font-size: 0.875em !important; }
+h6 { font-size: 0.85em !important; color: #656d76 !important; }
+
+/* Links */
+a {
+  color: #0969da !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  text-decoration: underline !important;
+}
+
+/* Code blocks */
+pre {
+  background-color: #f6f8fa !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 6px !important;
+  padding: 16px !important;
+  overflow-x: auto !important;
+  font-size: 85% !important;
+  line-height: 1.45 !important;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace !important;
+  font-size: 85% !important;
+}
+
+:not(pre) > code {
+  background-color: rgba(175, 184, 193, 0.2) !important;
+  color: #24292f !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 6px !important;
+  font-size: 85% !important;
+}
+
+/* Blockquotes */
+blockquote {
+  background-color: transparent !important;
+  border-left: 4px solid #d0d7de !important;
+  color: #656d76 !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 1em !important;
+}
+
+blockquote > :first-child {
+  margin-top: 0 !important;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  margin: 16px 0 !important;
+}
+
+th, td {
+  border: 1px solid #d0d7de !important;
+  padding: 6px 13px !important;
+}
+
+th {
+  background-color: #f6f8fa !important;
+  font-weight: 600 !important;
+}
+
+tr:nth-child(even) {
+  background-color: #f6f8fa !important;
+}
+
+/* Lists */
+ul, ol {
+  padding-left: 2em !important;
+  margin: 0 0 16px 0 !important;
+}
+
+li {
+  margin: 0.25em 0 !important;
+}
+
+li + li {
+  margin-top: 0.25em !important;
+}
+
+/* Horizontal rule */
+hr {
+  border: none !important;
+  border-top: 1px solid #d0d7de !important;
+  margin: 24px 0 !important;
+  background-color: transparent !important;
+  height: 0.25em !important;
+}
+
+/* Images */
+img {
+  max-width: 100% !important;
+  border-radius: 6px !important;
+  margin: 16px 0 !important;
+}
+
+/* Mermaid diagrams */
+.mermaid {
+  background-color: #f6f8fa !important;
+  border-radius: 6px !important;
+  padding: 16px !important;
+  margin: 16px 0 !important;
+  text-align: center !important;
+}
+
+/* Task lists */
+input[type="checkbox"] {
+  margin-right: 0.5em !important;
+}
+
+/* Selection */
+::selection {
+  background-color: #0969da !important;
+  color: #ffffff !important;
+}
+
+/* Paragraphs */
+p {
+  margin: 0 0 16px 0 !important;
+}
+
+/* Strong and emphasis */
+strong {
+  font-weight: 600 !important;
+}
+
+/* Page break support for PDF export */
+@media print {
+  body {
+    background-color: #ffffff !important;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid !important;
+  }
+
+  pre, blockquote, table, img {
+    page-break-inside: avoid !important;
+  }
+
+  /* Manual page breaks: use <div class="page-break"></div> in markdown */
+  .page-break {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+}
