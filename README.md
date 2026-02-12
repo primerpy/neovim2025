@@ -70,7 +70,7 @@ If you prefer to install manually or the script doesn't work for your system:
 
 #### Prerequisites
 
-1. **Neovim 0.10+**
+1. **Neovim 0.11+**
    ```bash
    # Check version
    nvim --version
