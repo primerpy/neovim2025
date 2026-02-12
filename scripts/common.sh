@@ -74,6 +74,7 @@ setup_config() {
 }
 
 check_neovim_version() {
+    local required_minor=${1:-11}  # Default to 0.11+ if not specified
     if command -v nvim &> /dev/null; then
         # Extract version number (works on both macOS and Linux)
         local version=$(nvim --version | head -n1 | sed -E 's/.*v([0-9]+\.[0-9]+).*/\1/')
@@ -82,14 +83,51 @@ check_neovim_version() {
 
         # Check if version numbers are valid integers
         if [[ "$major" =~ ^[0-9]+$ ]] && [[ "$minor" =~ ^[0-9]+$ ]]; then
-            if [[ $major -gt 0 ]] || [[ $major -eq 0 && $minor -ge 10 ]]; then
-                print_success "Neovim version $version is compatible"
+            if [[ $major -gt 0 ]] || [[ $major -eq 0 && $minor -ge $required_minor ]]; then
+                print_success "Neovim version $version is compatible (requires 0.${required_minor}+)"
                 return 0
             else
-                print_warning "Neovim version $version found, but 0.10+ is recommended"
+                print_warning "Neovim version $version found, but 0.${required_minor}+ is required"
                 return 1
             fi
         fi
     fi
     return 1
+}
+
+remove_old_neovim() {
+    print_info "Checking for old Neovim installations to clean up..."
+
+    # Remove from /opt if exists
+    if [[ -d "/opt/nvim-linux64" ]]; then
+        print_info "Removing old Neovim from /opt/nvim-linux64..."
+        sudo rm -rf /opt/nvim-linux64
+    fi
+
+    # Remove symlink from /usr/local/bin
+    if [[ -L "/usr/local/bin/nvim" ]]; then
+        print_info "Removing old Neovim symlink from /usr/local/bin..."
+        sudo rm -f /usr/local/bin/nvim
+    fi
+
+    # Remove from /usr/local if installed there directly
+    if [[ -f "/usr/local/bin/nvim" ]] && [[ ! -L "/usr/local/bin/nvim" ]]; then
+        print_info "Removing old Neovim binary from /usr/local/bin..."
+        sudo rm -f /usr/local/bin/nvim
+    fi
+
+    # Remove package manager installed versions
+    if command -v dnf &> /dev/null; then
+        if dnf list installed neovim &> /dev/null 2>&1; then
+            print_info "Removing dnf-installed Neovim..."
+            sudo dnf remove -y neovim 2>/dev/null || true
+        fi
+    elif command -v apt &> /dev/null; then
+        if dpkg -l neovim &> /dev/null 2>&1; then
+            print_info "Removing apt-installed Neovim..."
+            sudo apt remove -y neovim 2>/dev/null || true
+        fi
+    fi
+
+    print_success "Old Neovim installations cleaned up"
 }
