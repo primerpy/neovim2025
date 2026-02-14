@@ -79,7 +79,7 @@ return {
     null_ls.setup {
       sources = sources,
       on_attach = function(client, bufnr)
-        if client.supports_method 'textDocument/formatting' then
+        if client:supports_method 'textDocument/formatting' then
           -- Set up <leader>f for manual formatting
           vim.keymap.set('n', '<leader>lf', function()
             vim.lsp.buf.format { async = false }

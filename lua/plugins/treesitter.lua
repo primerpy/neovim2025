@@ -1,61 +1,34 @@
-return  { -- Highlight, edit, and navigate code
+return {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = {
-        -- Core
-        'lua',
-        'vim',
-        'vimdoc',
-        'regex',
-        'bash',
-        -- Frontend (React)
-        'javascript',
-        'typescript',
-        'tsx',
-        'html',
-        'css',
-        -- Backend
-        'python',
-        'go',
-        'rust',
-        'java',
-        -- Data/Config
-        'json',
-        'yaml',
-        'toml',
-        'graphql',
-        -- Infrastructure
-        'terraform',
-        'sql',
-        'dockerfile',
-        'make',
-        'cmake',
-        -- Other
-        'markdown',
-        'markdown_inline',
-        'groovy',
-        'gitignore',
-        'htmldjango',
-      },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-      fold = { enable = true }, -- Enable Treesitter-based folding
-    },
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+    config = function()
+      -- Ensure parser install dir is in runtimepath (lazy.nvim may strip it)
+      local install_dir = vim.fn.stdpath 'data' .. '/site'
+      if not vim.tbl_contains(vim.opt.rtp:get(), install_dir) then
+        vim.opt.rtp:prepend(install_dir)
+      end
+
+      local parsers = {
+        'lua', 'vim', 'vimdoc', 'regex', 'bash',
+        'javascript', 'typescript', 'tsx', 'html', 'css',
+        'python', 'go', 'rust', 'java',
+        'json', 'yaml', 'toml', 'graphql',
+        'terraform', 'sql', 'dockerfile', 'make', 'cmake',
+        'markdown', 'markdown_inline', 'groovy', 'gitignore', 'htmldjango',
+      }
+
+      -- Auto-install missing parsers on startup
+      vim.api.nvim_create_autocmd('VimEnter', {
+        once = true,
+        callback = function()
+          local installed = require('nvim-treesitter.config').get_installed()
+          local to_install = vim.tbl_filter(function(p)
+            return not vim.tbl_contains(installed, p)
+          end, parsers)
+          if #to_install > 0 then
+            vim.cmd('TSInstall ' .. table.concat(to_install, ' '))
+          end
+        end,
+      })
+    end,
   }
