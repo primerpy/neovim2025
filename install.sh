@@ -31,6 +31,9 @@ detect_os() {
             ubuntu)
                 OS="ubuntu"
                 ;;
+            pop)
+                OS="pop"
+                ;;
             debian)
                 OS="debian"
                 ;;

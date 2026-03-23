@@ -5,7 +5,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "${SCRIPT_DIR}/scripts/common.sh"
 
-print_info "Installing dependencies for LMDE 6..."
+print_info "Installing dependencies for Pop!_OS..."
 
 # Update package list
 print_info "Updating package list..."
@@ -15,9 +15,16 @@ sudo apt-get update
 print_info "Installing build essentials..."
 sudo apt-get install -y build-essential curl wget git unzip libreadline-dev
 
-# Install Neovim from GitHub releases (LMDE repos may have older versions)
+# Install Neovim from GitHub releases (Pop!_OS doesn't use Ubuntu PPAs)
 if ! check_neovim_version; then
     install_neovim_github
+fi
+
+# Install wl-clipboard for Wayland clipboard support (COSMIC uses Wayland)
+if ! check_command wl-copy; then
+    print_info "Installing wl-clipboard for Wayland clipboard support..."
+    sudo apt-get install -y wl-clipboard
+    print_success "wl-clipboard installed"
 fi
 
 # Install Node.js (for LSP servers)
@@ -41,7 +48,6 @@ if ! check_command go; then
     sudo rm -rf /usr/local/go
     sudo tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz"
     rm "go${GO_VERSION}.linux-amd64.tar.gz"
-<<<<<<< HEAD
     # Add to PATH for current session
     export PATH=$PATH:/usr/local/go/bin
     # Detect shell and add to appropriate rc file
@@ -78,7 +84,7 @@ fi
 if ! check_command fd; then
     print_info "Installing fd-find..."
     sudo apt-get install -y fd-find
-    # Create symlink since Debian-based systems call it fdfind
+    # Create symlink since it's named fdfind on Debian-based systems
     sudo ln -sf $(which fdfind) /usr/local/bin/fd
     print_success "fd-find installed"
 fi
@@ -108,6 +114,7 @@ if [[ ! -f "JetBrainsMonoNerdFont-Regular.ttf" ]]; then
     fi
     fc-cache -fv
     print_success "JetBrains Mono Nerd Font installed"
+    print_warning "Set 'JetBrainsMono Nerd Font' as your font in COSMIC Terminal settings"
 else
     print_success "Nerd Font already installed"
 fi
@@ -116,4 +123,4 @@ fi
 cd "$SCRIPT_DIR"
 setup_config
 
-print_success "LMDE 6 installation completed!"
+print_success "Pop!_OS installation completed!"

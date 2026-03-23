@@ -82,14 +82,48 @@ check_neovim_version() {
 
         # Check if version numbers are valid integers
         if [[ "$major" =~ ^[0-9]+$ ]] && [[ "$minor" =~ ^[0-9]+$ ]]; then
-            if [[ $major -gt 0 ]] || [[ $major -eq 0 && $minor -ge 10 ]]; then
+            if [[ $major -gt 0 ]] || [[ $major -eq 0 && $minor -ge 11 ]]; then
                 print_success "Neovim version $version is compatible"
                 return 0
             else
-                print_warning "Neovim version $version found, but 0.10+ is recommended"
+                print_warning "Neovim version $version found, but 0.11+ is required"
                 return 1
             fi
         fi
     fi
     return 1
+}
+
+install_neovim_github() {
+    # Fetch the latest stable release version from GitHub API
+    local latest_version
+    latest_version=$(curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep -Po '"tag_name": "\K[^"]*')
+    if [[ -z "$latest_version" ]]; then
+        print_error "Failed to fetch latest Neovim version from GitHub"
+        return 1
+    fi
+    print_info "Latest stable Neovim version: $latest_version"
+
+    # Detect architecture
+    local arch
+    arch=$(uname -m)
+    local tarball
+    if [[ "$arch" == "aarch64" || "$arch" == "arm64" ]]; then
+        tarball="nvim-linux-arm64.tar.gz"
+    else
+        tarball="nvim-linux-x86_64.tar.gz"
+    fi
+
+    wget -q "https://github.com/neovim/neovim/releases/download/${latest_version}/${tarball}"
+    sudo rm -rf /opt/nvim-linux64
+    sudo tar -xzf "$tarball" -C /opt/
+    # Normalize directory name regardless of archive contents
+    local extracted_dir
+    extracted_dir=$(tar -tzf "$tarball" | head -1 | cut -d/ -f1)
+    if [[ "$extracted_dir" != "nvim-linux64" ]]; then
+        sudo mv "/opt/${extracted_dir}" /opt/nvim-linux64
+    fi
+    sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim
+    rm "$tarball"
+    print_success "Neovim $latest_version installed"
 }

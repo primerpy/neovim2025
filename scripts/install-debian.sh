@@ -17,13 +17,7 @@ sudo apt-get install -y build-essential curl wget git unzip libreadline-dev
 
 # Install Neovim from source (Debian repos may have older versions)
 if ! check_neovim_version; then
-    print_info "Installing Neovim from GitHub releases..."
-    NVIM_VERSION="v0.10.2"
-    wget -q https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux64.tar.gz
-    sudo tar -xzf nvim-linux64.tar.gz -C /opt/
-    sudo ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim
-    rm nvim-linux64.tar.gz
-    print_success "Neovim installed"
+    install_neovim_github
 fi
 
 # Install Node.js (for LSP servers)

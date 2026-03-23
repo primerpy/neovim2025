@@ -39,12 +39,7 @@ return {
         end, 10)
       end,
     },
-    -- When no session exists, open neo-tree
-    no_restore_cmds = {
-      function()
-        vim.cmd 'Neotree show'
-      end,
-    },
+    no_restore_cmds = {},
   },
   keys = {
     { '<leader>qs', '<cmd>SessionRestore<cr>', desc = 'Restore session for cwd' },
