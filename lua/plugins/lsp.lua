@@ -259,7 +259,53 @@ return {
       tailwindcss = {},
       dockerls = {},
       sqls = {},
-      gopls = {},
+      gopls = {
+        settings = {
+          gopls = {
+            -- Static analyzers (covers ineffassign, govet, staticcheck, unusedvar)
+            staticcheck = true,
+            analyses = {
+              unusedvariable = true,
+              unusedparams = true,
+              unusedwrite = true,
+              shadow = true,
+              ineffassign = true,
+              nilness = true,
+              fieldalignment = false, -- noisy; turn on per-project if desired
+            },
+            -- Inlay hints — show types/params inline (toggle with <leader>th)
+            hints = {
+              assignVariableTypes = true,
+              compositeLiteralFields = true,
+              compositeLiteralTypes = true,
+              constantValues = false,
+              functionTypeParameters = true,
+              parameterNames = true,
+              rangeVariableTypes = true,
+            },
+            -- Code lenses (run/test/debug above functions)
+            codelenses = {
+              gc_details = false,
+              generate = true,
+              regenerate_cgo = true,
+              run_govulncheck = true,
+              test = true,
+              tidy = true,
+              upgrade_dependency = true,
+              vendor = true,
+            },
+            -- Completion improvements
+            completeUnimported = true,
+            usePlaceholders = true,
+            matcher = 'fuzzy',
+            symbolMatcher = 'fuzzy',
+            -- Diagnostics
+            diagnosticsDelay = '300ms',
+            -- Semantic highlighting (better syntax)
+            semanticTokens = true,
+          },
+        },
+      },
       jsonls = {},
       yamlls = {
         settings = {
@@ -323,6 +369,9 @@ return {
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
+      'rust-analyzer', -- Configured by rustaceanvim (lua/plugins/rust.lua)
+      'codelldb', -- DAP adapter for Rust / C / C++ (used by rustaceanvim debuggables)
+      'taplo', -- TOML language server / formatter (Cargo.toml, etc.)
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

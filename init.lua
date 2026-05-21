@@ -59,4 +59,6 @@ require('lazy').setup {
   require 'plugins.misc',
   require 'plugins.auto-session',
   require 'plugins.markdown-preview',
+  require 'plugins.go',
+  require 'plugins.rust',
 }
