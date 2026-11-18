@@ -35,8 +35,8 @@ return {
     opts = { signs = false },
   },
   {
-    -- High-performance color highlighter
-    'NvChad/nvim-colorizer.lua',
+    -- High-performance color highlighter (maintained fork of norcalli/nvim-colorizer.lua)
+    'catgoose/nvim-colorizer.lua',
     config = function()
       require('colorizer').setup()
     end,
