@@ -68,3 +68,12 @@ vim.o.foldlevel = 99 -- Start with all folds open (default: 0)
 vim.o.foldlevelstart = 99 -- Open all folds when opening a file (default: -1)
 vim.o.foldenable = true -- Enable folding (default: true)
 vim.o.foldcolumn = '0' -- Don't show fold column (default: '0')
+
+-- Session: 'localoptions' lets auto-session restore filetype/highlighting correctly
+vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+
+-- Disable unused remote-plugin providers (silences :checkhealth warnings, speeds startup)
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
